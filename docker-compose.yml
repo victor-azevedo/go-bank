@@ -1,0 +1,21 @@
+services:
+  db:
+    image: mongo
+    container_name: db
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - db:/data/go-bank/db
+
+  app:
+    container_name: go-bank-app
+    build: .
+    env_file:
+      - .env
+    ports:
+      - "${PORT}:${PORT}"
+    depends_on:
+      - db
+volumes:
+  db:
