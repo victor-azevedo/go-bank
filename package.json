@@ -2,9 +2,14 @@
   "name": "go-bank",
   "version": "1.0.0",
   "description": "REST API for a banking system, providing features for managing current accounts",
-  "main": "index.js",
+  "main": "dist/server.js",
   "author": "Victor Azevedo",
   "license": "ISC",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/server.js",
+    "dev": "NODE_ENV=development nodemon --watch 'src/' --exec 'ts-node ./src/server.ts' -e ts"
+  },
   "dependencies": {
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
