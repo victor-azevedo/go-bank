@@ -17,6 +17,5 @@ export function loadEnv() {
 
   dotenv.config({ path, override: true });
 
-  // eslint-disable-next-line no-console
   console.log(`Loaded env: "${path}"`);
 }
