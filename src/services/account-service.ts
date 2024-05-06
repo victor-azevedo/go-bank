@@ -1,6 +1,7 @@
 import { accountRepository } from "../repositories";
 import { BadRequestError, ConflictError, NotFoundError } from "../errors";
-import { AccountDocument } from "../models";
+import { AccountDocument, ETransactionType } from "../models";
+import { transactionService } from "./transaction-service";
 
 async function create(userId: string) {
   const userAccount = await accountRepository.findByUserId(userId);
@@ -25,6 +26,8 @@ async function deposit(userId: string, value: number) {
   const newBalance = depositInAccount(userAccount, value);
   await accountRepository.updateBalanceByAccountId(userAccount.id, newBalance);
 
+  await transactionService.create(userAccount.id, value, ETransactionType.DEPOSIT);
+
   const accountUpdated = await accountRepository.findByUserId(userId);
   return { accountNumber: accountUpdated?.accountNumber, balance: accountUpdated?.balance };
 }
@@ -35,6 +38,8 @@ async function withdraw(userId: string, value: number) {
 
   const newBalance = withdrawInAccount(userAccount, value);
   await accountRepository.updateBalanceByAccountId(userAccount.id, newBalance);
+
+  await transactionService.create(userAccount.id, value, ETransactionType.WITHDRAW);
 
   const accountUpdated = await accountRepository.findByUserId(userId);
   return { accountNumber: accountUpdated?.accountNumber, balance: accountUpdated?.balance };
@@ -54,6 +59,8 @@ async function transfer(userId: string, accountNumberDestiny: number, value: num
   const newBalanceDestiny = depositInAccount(destinyAccount, value);
 
   await accountRepository.transfer(originAccount, newBalanceOrigin, destinyAccount, newBalanceDestiny);
+
+  await transactionService.create(originAccount.id, value, ETransactionType.TRANSFER, destinyAccount.id);
 
   const accountUpdated = await accountRepository.findByUserId(userId);
   return { accountNumber: accountUpdated?.accountNumber, balance: accountUpdated?.balance };
