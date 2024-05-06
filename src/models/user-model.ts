@@ -22,13 +22,10 @@ const userSchema: mongoose.Schema<UserDocument> = new mongoose.Schema({
       message: "Invalid CPF",
     },
     required: true,
-    minlength: [11, "Too short cpf."],
-    maxlength: [11, "Too long cpf."],
   },
   password: {
     type: String,
     required: true,
-    minlength: [6, "Too short password."],
   },
 });
 

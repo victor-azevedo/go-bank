@@ -8,6 +8,14 @@ export const handleApplicationError = (err: Error, _req: Request, res: Response,
   if (err instanceof ApplicationError) {
     return res.status(err.statusCode).send({
       message: err.message,
+      stack: process.env.NODE_ENV === "development" ? err.stack : {},
+    });
+  }
+
+  if (err.name === "ValidationError") {
+    return res.status(httpStatus.BAD_REQUEST).send({
+      message: err.message,
+      stack: process.env.NODE_ENV === "development" ? err.stack : {},
     });
   }
 
