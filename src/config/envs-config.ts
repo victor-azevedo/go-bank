@@ -16,6 +16,4 @@ export function loadEnv() {
   const path = envFileMap.hasOwnProperty(env as EnvFileMapKeys) ? envFileMap[env as EnvFileMapKeys] : defaultEnvFile;
 
   dotenv.config({ path, override: true });
-
-  console.log(`Loaded env: "${path}"`);
 }
