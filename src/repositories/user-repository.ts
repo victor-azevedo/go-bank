@@ -1,8 +1,7 @@
 import { User, userModel } from "../models/";
 
 async function create(user: User) {
-  const doc = await userModel.create(user);
-  return;
+  return await userModel.create(user);
 }
 
 async function findByCpf(cpf: string) {

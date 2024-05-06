@@ -4,6 +4,8 @@ export interface User {
   name: string;
   cpf: string;
   password: string;
+  isActive?: boolean;
+  createdAt?: Date;
 }
 
 export interface UserDocument extends User, mongoose.Document {}
@@ -27,9 +29,27 @@ const userSchema: mongoose.Schema<UserDocument> = new mongoose.Schema({
     type: String,
     required: true,
   },
+  isActive: {
+    type: Boolean,
+    default: true,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+    required: true,
+  },
 });
 
-export const userModel = mongoose.model<UserDocument>("User", userSchema);
+userSchema.virtual("id").get(function (this: UserDocument) {
+  return this._id.toHexString();
+});
+
+userSchema.set("toJSON", {
+  virtuals: true,
+});
+
+export const userModel = mongoose.model<UserDocument>("UserModel", userSchema);
 
 function isValidCPF(cpf: string): boolean {
   let remainder: number;
