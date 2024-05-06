@@ -1,7 +1,7 @@
 import "express-async-errors";
 import cors from "cors";
 import express from "express";
-import { accountRouter, authRouter } from "./routes/";
+import { accountRouter, authRouter, transactionRouter } from "./routes/";
 import { handleApplicationError } from "./middlewares/";
 import { connectMongoDB, disconnectMongoDB } from "./databases/mongodb";
 
@@ -22,6 +22,12 @@ app.use("/auth", (req, res, next) => {
 app.use("/account", (req, res, next) => {
   try {
     accountRouter(req, res, next);
+  } catch (next) {}
+});
+
+app.use("/transaction", (req, res, next) => {
+  try {
+    transactionRouter(req, res, next);
   } catch (next) {}
 });
 

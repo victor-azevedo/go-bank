@@ -19,7 +19,7 @@ async function create(accountOriginId: string, value: number, type: ETransaction
 
 async function findAllByAccountId(accountId: string) {
   return await transactionModel.find({
-    $or: [{ accountOriginId: new Types.ObjectId(accountId), accountDestinyId: new Types.ObjectId(accountId) }],
+    $or: [{ accountOriginId: new Types.ObjectId(accountId) }, { accountDestinyId: new Types.ObjectId(accountId) }],
   });
 }
 
