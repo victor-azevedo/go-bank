@@ -24,6 +24,7 @@ const accountSchema: mongoose.Schema<AccountDocument> = new mongoose.Schema({
   balance: {
     type: Number,
     required: true,
+    default: 0,
   },
   isActive: {
     type: Boolean,
