@@ -4,7 +4,7 @@ import { accountRepository } from "../repositories";
 import { addValueToBalance, subtractValueToBalance } from "../utils";
 import { transactionService } from "./transaction-service";
 
-async function create(userId: string) {
+export async function create(userId: string) {
   const userAccount = await accountRepository.findByUserId(userId);
   if (userAccount) throw new ConflictError("User Account already");
 
@@ -12,7 +12,7 @@ async function create(userId: string) {
   return { accountNumber };
 }
 
-async function getAccount(userId: string) {
+export async function getAccount(userId: string) {
   const userAccount = await accountRepository.findByUserId(userId);
   if (!userAccount) throw new NotFoundError();
 
@@ -20,33 +20,51 @@ async function getAccount(userId: string) {
   return { accountNumber, balance };
 }
 
-async function deposit(userId: string, value: number) {
+interface DepositParams {
+  userId: string;
+  value: number;
+}
+
+interface DepositResult {
+  accountNumber: number | undefined;
+  balance: number | undefined;
+}
+
+export async function deposit({ userId, value }: DepositParams) {
   const userAccount = await accountRepository.findByUserId(userId);
   if (!userAccount) throw new NotFoundError();
 
   const newBalance = addValueToBalance({ balanceFloat: userAccount.balance, valueFloat: value });
-  await accountRepository.updateBalanceByAccountId(userAccount.id, newBalance);
+  await accountRepository.updateBalanceByAccountId({ id: userAccount.id, balance: newBalance });
 
-  await transactionService.create(userAccount.id, value, ETransactionType.DEPOSIT);
+  await transactionService.create({ accountOriginId: userAccount.id, value, type: ETransactionType.DEPOSIT });
 
   const accountUpdated = await accountRepository.findByUserId(userId);
   return { accountNumber: accountUpdated?.accountNumber, balance: accountUpdated?.balance };
 }
 
-async function withdraw(userId: string, value: number) {
+interface WithdrawParams extends DepositParams {}
+interface WithdrawResult extends DepositResult {}
+
+export async function withdraw({ userId, value }: WithdrawParams) {
   const userAccount = await accountRepository.findByUserId(userId);
   if (!userAccount) throw new NotFoundError();
 
   const newBalance = subtractValueToBalance({ balanceFloat: userAccount.balance, valueFloat: value });
-  await accountRepository.updateBalanceByAccountId(userAccount.id, newBalance);
+  await accountRepository.updateBalanceByAccountId({ id: userAccount.id, balance: newBalance });
 
-  await transactionService.create(userAccount.id, value, ETransactionType.WITHDRAW);
+  await transactionService.create({ accountOriginId: userAccount.id, value, type: ETransactionType.WITHDRAW });
 
   const accountUpdated = await accountRepository.findByUserId(userId);
   return { accountNumber: accountUpdated?.accountNumber, balance: accountUpdated?.balance };
 }
 
-async function transfer(userId: string, accountNumberDestiny: number, value: number) {
+interface TransferParams extends DepositParams {
+  accountNumberDestiny: number;
+}
+interface TransferResult extends DepositResult {}
+
+export async function transfer({ userId, accountNumberDestiny, value }: TransferParams) {
   const originAccount = await accountRepository.findByUserId(userId);
   if (!originAccount) throw new NotFoundError();
 
@@ -59,15 +77,28 @@ async function transfer(userId: string, accountNumberDestiny: number, value: num
   const newBalanceOrigin = subtractValueToBalance({ balanceFloat: originAccount.balance, valueFloat: value });
   const newBalanceDestiny = addValueToBalance({ balanceFloat: destinyAccount.balance, valueFloat: value });
 
-  await accountRepository.transfer(originAccount, newBalanceOrigin, destinyAccount, newBalanceDestiny);
+  await accountRepository.transfer({ originAccount, newBalanceOrigin, destinyAccount, newBalanceDestiny });
 
-  await transactionService.create(originAccount.id, value, ETransactionType.TRANSFER, destinyAccount.id);
+  await transactionService.create({
+    accountOriginId: originAccount.id,
+    value,
+    type: ETransactionType.TRANSFER,
+    accountDestinyId: destinyAccount.id,
+  });
 
   const accountUpdated = await accountRepository.findByUserId(userId);
   return { accountNumber: accountUpdated?.accountNumber, balance: accountUpdated?.balance };
 }
 
-export const accountService = {
+export interface AccountService {
+  create: (userId: string) => Promise<{ accountNumber: number }>;
+  getAccount: (userId: string) => Promise<{ accountNumber: number; balance: number }>;
+  deposit: (params: DepositParams) => Promise<DepositResult>;
+  withdraw: (params: WithdrawParams) => Promise<WithdrawResult>;
+  transfer: (params: TransferParams) => Promise<TransferResult>;
+}
+
+export const accountService: AccountService = {
   create,
   getAccount,
   deposit,

@@ -5,7 +5,7 @@ import { ConflictError, NotFoundError, UnauthorizedError } from "../errors/";
 import { SignIn, SignUp } from "../interfaces/";
 import { userRepository } from "../repositories/";
 
-async function signUp(params: SignUp) {
+export async function signUp(params: SignUp) {
   const { name, cpf, password } = params;
 
   const userExist = await userRepository.findByCpf(cpf);
@@ -18,7 +18,7 @@ async function signUp(params: SignUp) {
   return;
 }
 
-async function signIn(params: SignIn) {
+export async function signIn(params: SignIn) {
   const { cpf, password } = params;
 
   const user = await userRepository.findByCpf(cpf);
@@ -36,6 +36,11 @@ export function createToken(userId: string) {
   return jwt.sign({ userId }, jwtConfig.secretKey, {
     expiresIn: jwtConfig.expireIn,
   });
+}
+
+export interface AuthenticationService {
+  signUp: (params: SignUp) => Promise<void>;
+  signIn: (params: SignIn) => Promise<string>;
 }
 
 export const authenticationService = {

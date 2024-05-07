@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
+import httpStatus from "http-status";
 import { SignIn, SignUp } from "../interfaces/";
 import { authenticationService } from "../services/";
-import httpStatus from "http-status";
 
 async function signUp(req: Request, res: Response, next: NextFunction) {
   const userDataSignUp = req.body as SignUp;

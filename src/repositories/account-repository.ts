@@ -1,4 +1,4 @@
-import { Types, ClientSession, startSession } from "mongoose";
+import { ClientSession, startSession, Types } from "mongoose";
 import { AccountDocument, accountModel } from "../models";
 
 async function create(userId: string) {
@@ -13,25 +13,32 @@ async function findByAccountNumber(accountNumber: number) {
   return await accountModel.findOne({ accountNumber });
 }
 
-async function updateBalanceByAccountId(id: string, balance: number) {
+interface UpdateBalanceParams {
+  id: string;
+  balance: number;
+}
+
+async function updateBalanceByAccountId({ id, balance }: UpdateBalanceParams) {
   return await accountModel.findOneAndUpdate({ _id: new Types.ObjectId(id) }, { balance });
 }
 
-async function transfer(
-  originAccount: AccountDocument,
-  newBalanceOrigin: number,
-  destinyAccount: AccountDocument,
-  newBalanceDestiny: number,
-) {
+interface TransferParams {
+  originAccount: AccountDocument;
+  newBalanceOrigin: number;
+  destinyAccount: AccountDocument;
+  newBalanceDestiny: number;
+}
+
+async function transfer({ originAccount, newBalanceOrigin, destinyAccount, newBalanceDestiny }: TransferParams) {
   let session: ClientSession | undefined = undefined;
 
   try {
     session = await startSession();
     session.startTransaction();
 
-    await accountRepository.updateBalanceByAccountId(originAccount.id, newBalanceOrigin);
+    await accountRepository.updateBalanceByAccountId({ id: originAccount.id, balance: newBalanceOrigin });
 
-    await accountRepository.updateBalanceByAccountId(destinyAccount.id, newBalanceDestiny);
+    await accountRepository.updateBalanceByAccountId({ id: destinyAccount.id, balance: newBalanceDestiny });
 
     await session.commitTransaction();
   } catch (error) {
@@ -43,7 +50,15 @@ async function transfer(
   }
 }
 
-export const accountRepository = {
+export interface AccountRepository {
+  create: (userId: string) => Promise<AccountDocument>;
+  findByUserId: (userId: string) => Promise<AccountDocument | null>;
+  findByAccountNumber: (accountNumber: number) => Promise<AccountDocument | null>;
+  updateBalanceByAccountId: (params: UpdateBalanceParams) => Promise<AccountDocument | null>;
+  transfer: (params: TransferParams) => Promise<void>;
+}
+
+export const accountRepository: AccountRepository = {
   create,
   findByUserId,
   findByAccountNumber,

@@ -1,9 +1,16 @@
-import { accountRepository, transactionRepository } from "../repositories";
-import { ETransactionType } from "../models";
 import { NotFoundError } from "../errors";
+import { ETransactionType, TransactionDocument } from "../models";
+import { accountRepository, transactionRepository } from "../repositories";
 
-async function create(accountOriginId: string, value: number, type: ETransactionType, accountDestinyId?: string) {
-  await transactionRepository.create(accountOriginId, value, type, accountDestinyId);
+interface CreateTransactionServiceParam {
+  accountOriginId: string;
+  value: number;
+  type: ETransactionType;
+  accountDestinyId?: string;
+}
+
+async function create({ accountOriginId, value, type, accountDestinyId }: CreateTransactionServiceParam) {
+  await transactionRepository.create({ accountOriginId, value, type, accountDestinyId });
   return;
 }
 
@@ -16,7 +23,12 @@ async function findAllByUserId(userId: string) {
   return userTransactions;
 }
 
-export const transactionService = {
+export interface TransactionService {
+  create: (params: CreateTransactionServiceParam) => Promise<void>;
+  findAllByUserId: (userId: string) => Promise<TransactionDocument[]>;
+}
+
+export const transactionService: TransactionService = {
   create,
   findAllByUserId,
 };

@@ -1,7 +1,7 @@
 import { NextFunction, Response } from "express";
+import httpStatus from "http-status";
 import { ApplicationRequest } from "../interfaces";
 import { transactionService } from "../services";
-import httpStatus from "http-status";
 
 async function getAllUserTransactions(req: ApplicationRequest, res: Response, next: NextFunction) {
   const userId = req.userId;
