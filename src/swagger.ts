@@ -15,102 +15,12 @@ const doc = {
       description: "",
     },
   ],
-  paths: {
-    "/health": {
-      get: {
-        description: "",
-        responses: {
-          "200": {
-            description: "OK",
-          },
-        },
-      },
-    },
-    "/account/": {
-      post: {
-        description: "",
-        responses: {
-          default: {
-            description: "",
-          },
-        },
-      },
-      get: {
-        description: "",
-        responses: {
-          default: {
-            description: "",
-          },
-        },
-      },
-    },
-    "/account/transfer": {
-      post: {
-        description: "",
-        responses: {
-          default: {
-            description: "",
-          },
-        },
-      },
-    },
-    "/deposit": {
-      post: {
-        description: "",
-        responses: {
-          default: {
-            description: "",
-          },
-        },
-      },
-    },
-    "/withdraw": {
-      post: {
-        description: "",
-        responses: {
-          default: {
-            description: "",
-          },
-        },
-      },
-    },
-    "/auth/sign-up": {
-      post: {
-        description: "",
-        responses: {
-          default: {
-            description: "",
-          },
-        },
-      },
-    },
-    "/auth/sign-in": {
-      post: {
-        description: "",
-        responses: {
-          default: {
-            description: "",
-          },
-        },
-      },
-    },
-    "/transaction/": {
-      get: {
-        description: "",
-        responses: {
-          default: {
-            description: "",
-          },
-        },
-      },
-    },
-  },
+  paths: {},
   components: {
     securitySchemes: {
       bearerAuth: {
         type: "http",
-        scheme: "bearer",
-        bearerFormat: "JWT",
+        scheme: "Bearer",
       },
     },
   },
@@ -131,6 +41,6 @@ const options = {
   autoHeaders: false, //<boolean>,    Enable/Disable automatic headers recognition.  By default is true
   autoQuery: false, //<boolean>,    Enable/Disable automatic query recognition.    By default is true
   autoBody: false, //<boolean>,    Enable/Disable automatic body recognition.     By default is true
-  writeOutputFile: false, //<boolean>     Enable/Disable writing the output file.        By default is true
+  writeOutputFile: true, //<boolean>     Enable/Disable writing the output file.        By default is true
 };
 swaggerAutogen(options)(outputFile, endpointsFiles, doc);
