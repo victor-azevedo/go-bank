@@ -8,6 +8,7 @@ export const handleApplicationError = (err: Error, _req: Request, res: Response,
   if (err instanceof ApplicationError) {
     return res.status(err.statusCode).send({
       message: err.message,
+      details: err.details,
       stack: process.env.NODE_ENV === "development" ? err.stack : {},
     });
   }
