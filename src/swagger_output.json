@@ -1,0 +1,484 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "version": "v1.0.0",
+    "title": "Go Bank API",
+    "description": "Simule account transactions of a digital bank"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5000",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Check API health",
+        "tags": ["Health"],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "health": {
+                      "type": "string",
+                      "description": "API healthy!!!"
+                    },
+                    "exemple": {
+                      "health": "I'm healthy!!!"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/auth/sign-up": {
+      "post": {
+        "summary": "Register a new user",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignUpRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessed Entity"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/auth/sign-in": {
+      "post": {
+        "summary": "Authenticate user",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SignInRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User authenticated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": {
+                      "type": "string",
+                      "description": "Authentication JWT"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessed Entity"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/account/": {
+      "post": {
+        "summary": "Create a new bank account",
+        "description": "Creates a new bank account for the authenticated user.",
+        "tags": ["Account"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      },
+      "get": {
+        "summary": "Get user's bank account details",
+        "description": "Retrieves details of the bank account belonging to the authenticated user.",
+        "tags": ["Account"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Bank account details retrieved successfully"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/account/deposit": {
+      "post": {
+        "summary": "Deposit funds into user's bank account",
+        "description": "Deposits funds into the bank account of the authenticated user.",
+        "tags": ["Account"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessed Entity"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/account/withdraw": {
+      "post": {
+        "summary": "Withdraw funds from user's bank account",
+        "description": "Withdraws funds from the bank account of the authenticated user.",
+        "tags": ["Account"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TransactionData"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessed Entity"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/account/transfer": {
+      "post": {
+        "summary": "Transfer funds from user's bank account",
+        "description": "Transfers funds from the bank account of the authenticated user to another account.",
+        "tags": ["Account"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "accountNumberDestiny": {
+                    "type": "number",
+                    "description": "The account number of the destination account"
+                  },
+                  "value": {
+                    "type": "number",
+                    "description": "The amount to transfer from the account"
+                  }
+                },
+                "example": {
+                  "accountNumberDestiny": 1,
+                  "value": 2.22
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Unprocessed Entity"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/transaction/": {
+      "get": {
+        "summary": "Get all transactions for the current user",
+        "tags": ["Transactions"],
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TransactionsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "Bearer"
+      }
+    },
+    "schemas": {
+      "SignUpRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the user"
+          },
+          "cpf": {
+            "type": "string",
+            "description": "The CPF of the user"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password of the user"
+          }
+        },
+        "example": {
+          "name": "Victor Azevedo",
+          "cpf": "02775520014",
+          "password": "PassWord123"
+        }
+      },
+      "SignInRequest": {
+        "type": "object",
+        "properties": {
+          "cpf": {
+            "type": "string",
+            "description": "The CPF of the user"
+          },
+          "password": {
+            "type": "string",
+            "description": "The password of the user"
+          }
+        },
+        "example": {
+          "cpf": "02775520014",
+          "password": "PassWord123"
+        }
+      },
+      "TransactionData": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "number",
+            "description": "The amount of the transaction"
+          }
+        },
+        "example": {
+          "value": 50.59
+        }
+      },
+      "TransactionResponse": {
+        "type": "object",
+        "properties": {
+          "accountNumber": {
+            "type": "integer",
+            "description": "The account number"
+          },
+          "balance": {
+            "type": "number",
+            "description": "The balance after the transaction"
+          }
+        },
+        "example": {
+          "accountNumber": 123456,
+          "balance": 100.05
+        }
+      },
+      "TransactionsResponse": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "accountOriginId": {
+              "type": "string",
+              "description": "The ID of the account where the transaction originated"
+            },
+            "accountDestinyId": {
+              "type": "string",
+              "description": "The ID of the account where the transaction destined"
+            },
+            "type": {
+              "type": "string",
+              "description": "The type of transaction (e.g., 'deposit', 'withdrawal', 'transfer')"
+            },
+            "value": {
+              "type": "number",
+              "description": "The amount of the transaction"
+            },
+            "createdAt": {
+              "type": "string",
+              "format": "date-time",
+              "description": "The date and time when the transaction was created"
+            }
+          }
+        },
+        "required": ["accountOriginId", "type", "value", "createdAt"],
+        "example": [
+          {
+            "accountOriginId": "663a88f5440d55728706600a",
+            "type": "deposit",
+            "value": 10,
+            "createdAt": "2024-05-07T20:03:16.535Z"
+          }
+        ]
+      }
+    }
+  }
+}
