@@ -2,13 +2,13 @@ import { Router } from "express";
 import { accountController } from "../controllers";
 import { authenticateToken } from "../middlewares";
 import { validateBody } from "../middlewares/";
-import { accountDepositOrWithdrawSchema, TransferSchema } from "../schemas";
+import { accountDepositOrWithdrawSchema, transferSchema } from "../schemas";
 
 const accountRouter = Router();
 
 accountRouter.post("/", authenticateToken, accountController.create);
 accountRouter.get("/", authenticateToken, accountController.getAccount);
-accountRouter.post("/transfer", validateBody(TransferSchema), authenticateToken, accountController.transfer);
+accountRouter.post("/transfer", validateBody(transferSchema), authenticateToken, accountController.transfer);
 accountRouter.post(
   "/deposit",
   validateBody(accountDepositOrWithdrawSchema),
