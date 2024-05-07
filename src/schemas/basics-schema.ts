@@ -2,7 +2,7 @@ import Joi, { NumberSchema, StringSchema } from "joi";
 import { CPF_PATTERN, CURRENCY_PRECISION, PASSWORD_PATTERN } from "../utils";
 
 const NAME_MIN_LENGTH = 3;
-const NAME_MAX_LENGTH = 3;
+const NAME_MAX_LENGTH = 100;
 
 export const nameSchema: StringSchema = Joi.string().trim().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH);
 export const cpfSchema: StringSchema = Joi.string().trim().pattern(CPF_PATTERN, { name: "CPF" });
