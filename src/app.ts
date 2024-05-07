@@ -1,17 +1,20 @@
-import "express-async-errors";
 import cors from "cors";
 import express from "express";
-import { accountRouter, authRouter, transactionRouter } from "./routes/";
-import { handleApplicationError } from "./middlewares/";
+import "express-async-errors";
+import swaggerUi from "swagger-ui-express";
 import { connectMongoDB, disconnectMongoDB } from "./databases/mongodb";
+import { handleApplicationError } from "./middlewares/";
+import { accountRouter, authRouter, transactionRouter } from "./routes/";
+import swaggerOutput from "./swagger_output.json";
 
 const app = express();
 
-app
-  .use(cors())
-  .use(express.json())
+app.use(cors());
+app.use(express.json());
 
-  .get("/health", (_req, res) => res.send("I'm healthy!!!"));
+if (process.env.NODE_ENV == "development") app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerOutput));
+
+app.get("/health", (_req, res) => res.send({ health: "I'm healthy!!!" }));
 
 app.use("/auth", (req, res, next) => {
   try {
