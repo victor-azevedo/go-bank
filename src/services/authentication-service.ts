@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
+import * as jwt from "jsonwebtoken";
+import { jwtConfig } from "../config/";
 import { ConflictError, NotFoundError, UnauthorizedError } from "../errors/";
 import { SignIn, SignUp } from "../interfaces/";
 import { userRepository } from "../repositories/";
-import * as jwt from "jsonwebtoken";
-import { jwtConfig } from "../config/";
 
 async function signUp(params: SignUp) {
   const { name, cpf, password } = params;
@@ -27,11 +27,15 @@ async function signIn(params: SignIn) {
   const isPasswordValid = await bcrypt.compare(password, user.password);
   if (!isPasswordValid) throw new UnauthorizedError("Invalid credentials");
 
-  const token = jwt.sign({ userId: user.id }, jwtConfig.secretKey, {
-    expiresIn: jwtConfig.expireIn,
-  });
+  const token = createToken(user.id);
 
   return token;
+}
+
+export function createToken(userId: string) {
+  return jwt.sign({ userId }, jwtConfig.secretKey, {
+    expiresIn: jwtConfig.expireIn,
+  });
 }
 
 export const authenticationService = {
