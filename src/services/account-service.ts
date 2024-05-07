@@ -1,6 +1,7 @@
+import { ConflictError, NotFoundError } from "../errors";
+import { ETransactionType } from "../models";
 import { accountRepository } from "../repositories";
-import { BadRequestError, ConflictError, NotFoundError } from "../errors";
-import { AccountDocument, ETransactionType } from "../models";
+import { addValueToBalance, subtractValueToBalance } from "../utils";
 import { transactionService } from "./transaction-service";
 
 async function create(userId: string) {
@@ -23,7 +24,7 @@ async function deposit(userId: string, value: number) {
   const userAccount = await accountRepository.findByUserId(userId);
   if (!userAccount) throw new NotFoundError();
 
-  const newBalance = depositInAccount(userAccount, value);
+  const newBalance = addValueToBalance({ balanceFloat: userAccount.balance, valueFloat: value });
   await accountRepository.updateBalanceByAccountId(userAccount.id, newBalance);
 
   await transactionService.create(userAccount.id, value, ETransactionType.DEPOSIT);
@@ -36,7 +37,7 @@ async function withdraw(userId: string, value: number) {
   const userAccount = await accountRepository.findByUserId(userId);
   if (!userAccount) throw new NotFoundError();
 
-  const newBalance = withdrawInAccount(userAccount, value);
+  const newBalance = subtractValueToBalance({ balanceFloat: userAccount.balance, valueFloat: value });
   await accountRepository.updateBalanceByAccountId(userAccount.id, newBalance);
 
   await transactionService.create(userAccount.id, value, ETransactionType.WITHDRAW);
@@ -55,8 +56,8 @@ async function transfer(userId: string, accountNumberDestiny: number, value: num
   if (originAccount.accountNumber == destinyAccount.accountNumber)
     throw new ConflictError("Accounts must be different");
 
-  const newBalanceOrigin = withdrawInAccount(originAccount, value);
-  const newBalanceDestiny = depositInAccount(destinyAccount, value);
+  const newBalanceOrigin = subtractValueToBalance({ balanceFloat: originAccount.balance, valueFloat: value });
+  const newBalanceDestiny = addValueToBalance({ balanceFloat: destinyAccount.balance, valueFloat: value });
 
   await accountRepository.transfer(originAccount, newBalanceOrigin, destinyAccount, newBalanceDestiny);
 
@@ -64,18 +65,6 @@ async function transfer(userId: string, accountNumberDestiny: number, value: num
 
   const accountUpdated = await accountRepository.findByUserId(userId);
   return { accountNumber: accountUpdated?.accountNumber, balance: accountUpdated?.balance };
-}
-
-function depositInAccount(account: AccountDocument, value: number) {
-  const newBalance = account.balance + value;
-  return newBalance;
-}
-
-function withdrawInAccount(account: AccountDocument, value: number) {
-  if (value > account.balance) throw new BadRequestError("Insufficient balance");
-
-  const newBalance = account.balance - value;
-  return newBalance;
 }
 
 export const accountService = {
