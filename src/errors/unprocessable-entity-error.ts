@@ -3,6 +3,6 @@ import { ApplicationError } from "./application-error";
 
 export class UnprocessableEntityError extends ApplicationError {
   constructor({ message = "Unprocessable Entity", details }: { message?: string; details?: string[] }) {
-    super({ message, statusCode: httpStatus.BAD_REQUEST, details });
+    super({ message, statusCode: httpStatus.UNPROCESSABLE_ENTITY, details });
   }
 }
