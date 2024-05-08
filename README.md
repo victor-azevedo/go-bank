@@ -68,6 +68,17 @@ For each environment, configure the respective `.env` file:
 - For development: Configure `.env.development`
 - For testing: Configure `.env.test`
 
+## Tests
+
+Unit and integration tests have been implemented.
+To run the tests, configure `.env.test` adn run:
+
+```bash
+npm run test
+```
+
+Check for other available test scripts in the package.json.
+
 ## Documentation
 
 This API is documented using Swagger OpenAPI 3.0.0.
