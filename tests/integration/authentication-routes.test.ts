@@ -5,7 +5,7 @@ import app, { init } from "../../src/app";
 import { invalidCpf, mockSignIn1, mockSignUp1, validCpf2 } from "../mocks";
 import { clearDatabase, clearUserCollection } from "../utils";
 
-describe("Authorization routes", () => {
+describe("Authentication routes", () => {
   beforeAll(async () => {
     await init();
     await clearDatabase();

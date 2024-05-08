@@ -3,7 +3,7 @@ import { UnprocessableEntityError } from "../../src/errors";
 import { validateBody } from "../../src/middlewares";
 import { transferSchema } from "../../src/schemas";
 
-describe("SingInSchema", () => {
+describe("TransferSchema", () => {
   let req: Partial<Request>;
   let res: Partial<Response>;
   let next: jest.MockedFunction<NextFunction>;

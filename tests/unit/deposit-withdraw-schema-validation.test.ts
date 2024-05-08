@@ -3,7 +3,7 @@ import { UnprocessableEntityError } from "../../src/errors";
 import { validateBody } from "../../src/middlewares";
 import { accountDepositOrWithdrawSchema } from "../../src/schemas";
 
-describe("SingInSchema", () => {
+describe("DepositWithdrawSchema", () => {
   let req: Partial<Request>;
   let res: Partial<Response>;
   let next: jest.MockedFunction<NextFunction>;
