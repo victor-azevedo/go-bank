@@ -341,6 +341,14 @@
             "bearerAuth": []
           }
         ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/pageQueryParam"
+          },
+          {
+            "$ref": "#/components/parameters/limitQueryParam"
+          }
+        ],
         "responses": {
           "200": {
             "description": "Ok",
@@ -370,6 +378,26 @@
       "bearerAuth": {
         "type": "http",
         "scheme": "Bearer"
+      }
+    },
+    "parameters": {
+      "pageQueryParam": {
+        "in": "query",
+        "name": "page",
+        "schema": {
+          "type": "integer",
+          "default": 1,
+          "description": "The page number"
+        }
+      },
+      "limitQueryParam": {
+        "in": "query",
+        "name": "limit",
+        "schema": {
+          "type": "integer",
+          "default": 10,
+          "description": "The limit of items per page"
+        }
       }
     },
     "schemas": {
