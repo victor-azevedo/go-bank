@@ -1,24 +1,83 @@
 # GO Bank
 
-API para simular transferência d contas bancarias.
+API to simulate a bank accounts transactions.
 
-# Execução
+## How to run
 
-### Passo 1
+### 1. Locally Option:
 
-Para executar esse projeto, deve-se criar ou importar um arquivo .env, arquivo esse que deve conter todas as chaves de segurança.
+#### Requirements
 
-### Passo 2
+Have Node.js (recommended version: 20.12.2) and MongoDB (recommended version: 7.0.9) installed in your machine.
 
-Utilizando npm, pnpm ou yarn, execute os comandos em ordem:
+1.1 Clone this repository;
 
 ```bash
-
-    npm install
-
-    npm run build
-
-    npm run start
-
-
+git clone git@github.com:victor-azevedo/go-bank.git
+cd go-bank
 ```
+
+1.2 Install all dependencies:
+
+```bash
+npm i
+```
+
+1.3 Create a `.env` file based in `.env.example`;
+
+1.4 Compile Typescript code:
+
+```bash
+npm run build
+```
+
+1.5 Start application:
+
+```bash
+npm start
+```
+
+### 2. Docker Option:
+
+#### Requirements
+
+Have Docker and Docker Compose installed.
+
+2.1 Clone this repository;
+
+```bash
+git clone git@github.com:victor-azevedo/go-bank.git
+cd go-bank
+```
+
+2.2 Create a `.env` file based in `.env.example`;
+
+2.3 Run Docker Compose file:
+
+```bash
+sudo docker compose up
+```
+
+## Environments
+
+This API can be run in three types of environments.
+
+For each environment, configure the respective `.env` file:
+
+- For production: Configure `.env`
+- For development: Configure `.env.development`
+- For testing: Configure `.env.test`
+
+## Documentation
+
+This API is documented using Swagger OpenAPI 3.0.0.
+
+To access the documentation, visit the endpoint: `/docs`.
+
+Note: This endpoint is only accessible when running the application in `development` environment.
+
+![Cover ](/assets/sample-swagger.png)
+
+## Authorship
+
+This project was developed by [Victor Azevedo](https://victorazevedo.vercel.app/).
