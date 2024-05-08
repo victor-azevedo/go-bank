@@ -186,7 +186,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TransactionData"
+                "$ref": "#/components/schemas/AccountOperationBody"
               }
             }
           }
@@ -197,7 +197,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TransactionResponse"
+                  "$ref": "#/components/schemas/AccountOperationResponse"
                 }
               }
             }
@@ -232,7 +232,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/TransactionData"
+                "$ref": "#/components/schemas/AccountOperationBody"
               }
             }
           }
@@ -243,7 +243,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TransactionResponse"
+                  "$ref": "#/components/schemas/AccountOperationResponse"
                 }
               }
             }
@@ -306,7 +306,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TransactionResponse"
+                  "$ref": "#/components/schemas/AccountOperationResponse"
                 }
               }
             }
@@ -412,7 +412,7 @@
           "password": "PassWord123"
         }
       },
-      "TransactionData": {
+      "AccountOperationBody": {
         "type": "object",
         "properties": {
           "value": {
@@ -424,7 +424,7 @@
           "value": 50.59
         }
       },
-      "TransactionResponse": {
+      "AccountOperationResponse": {
         "type": "object",
         "properties": {
           "accountNumber": {
@@ -442,42 +442,67 @@
         }
       },
       "TransactionsResponse": {
-        "type": "array",
-        "items": {
-          "type": "object",
-          "properties": {
-            "accountOriginId": {
-              "type": "string",
-              "description": "The ID of the account where the transaction originated"
-            },
-            "accountDestinyId": {
-              "type": "string",
-              "description": "The ID of the account where the transaction destined"
-            },
-            "type": {
-              "type": "string",
-              "description": "The type of transaction (e.g., 'deposit', 'withdrawal', 'transfer')"
-            },
-            "value": {
-              "type": "number",
-              "description": "The amount of the transaction"
-            },
-            "createdAt": {
-              "type": "string",
-              "format": "date-time",
-              "description": "The date and time when the transaction was created"
+        "type": "object",
+        "properties": {
+          "transactions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Transaction"
             }
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
           }
-        },
-        "required": ["accountOriginId", "type", "value", "createdAt"],
-        "example": [
-          {
-            "accountOriginId": "663a88f5440d55728706600a",
-            "type": "deposit",
-            "value": 10,
-            "createdAt": "2024-05-07T20:03:16.535Z"
+        }
+      },
+      "Transaction": {
+        "type": "object",
+        "properties": {
+          "accountOriginId": {
+            "type": "string",
+            "description": "The ID of the account where the transaction originated"
+          },
+          "type": {
+            "type": "string",
+            "description": "The type of transaction (e.g., 'withdraw', 'deposit')"
+          },
+          "value": {
+            "type": "number",
+            "description": "The amount of the transaction"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "description": "The date and time when the transaction occurred"
           }
-        ]
+        }
+      },
+      "Pagination": {
+        "type": "object",
+        "properties": {
+          "currentPage": {
+            "type": "integer",
+            "description": "The current page number"
+          },
+          "totalPages": {
+            "type": "integer",
+            "description": "The total number of pages"
+          },
+          "totalItems": {
+            "type": "integer",
+            "description": "The total number of items"
+          },
+          "nextPage": {
+            "type": "string",
+            "nullable": true,
+            "description": "The URL for the next page of resources (null if no next page)"
+          },
+          "prevPage": {
+            "type": "string",
+            "nullable": true,
+            "description": "The URL for the previous page of resources (null if no previous page)"
+          }
+        }
       }
     }
   }
