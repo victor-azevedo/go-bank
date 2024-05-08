@@ -1,5 +1,5 @@
-import { BadRequestError } from "../src/errors";
-import { addValueToBalance, dineroFromFloat, subtractValueToBalance } from "../src/utils/handle-currency";
+import { BadRequestError } from "../../src/errors";
+import { addValueToBalance, dineroFromFloat, subtractValueToBalance } from "../../src/utils/handle-currency";
 
 describe("HandleCurrency", () => {
   describe("dineroFromFloat", () => {

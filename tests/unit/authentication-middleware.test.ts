@@ -1,8 +1,8 @@
 import { NextFunction, Response } from "express";
-import { UnauthorizedError } from "../src/errors";
-import { ApplicationRequest } from "../src/interfaces";
-import { authenticateToken } from "../src/middlewares";
-import { createToken } from "../src/services";
+import { UnauthorizedError } from "../../src/errors";
+import { ApplicationRequest } from "../../src/interfaces";
+import { authenticateToken } from "../../src/middlewares";
+import { createToken } from "../../src/services";
 
 describe("authenticateToken middleware", () => {
   let req: any;

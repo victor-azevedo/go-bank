@@ -1,9 +1,9 @@
 import bcrypt from "bcrypt";
-import { ConflictError, NotFoundError, UnauthorizedError } from "../src/errors";
-import { userRepository } from "../src/repositories";
-import { signIn, signUp } from "../src/services/authentication-service";
+import { ConflictError, NotFoundError, UnauthorizedError } from "../../src/errors";
+import { userRepository } from "../../src/repositories";
+import { signIn, signUp } from "../../src/services/authentication-service";
 
-jest.mock("../src/repositories", () => ({
+jest.mock("../../src/repositories", () => ({
   userRepository: {
     findByCpf: jest.fn(),
     create: jest.fn(),

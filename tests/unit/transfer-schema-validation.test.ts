@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { UnprocessableEntityError } from "../src/errors";
-import { validateBody } from "../src/middlewares";
-import { transferSchema } from "../src/schemas";
+import { UnprocessableEntityError } from "../../src/errors";
+import { validateBody } from "../../src/middlewares";
+import { transferSchema } from "../../src/schemas";
 
 describe("SingInSchema", () => {
   let req: Partial<Request>;

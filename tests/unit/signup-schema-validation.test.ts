@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
-import { UnprocessableEntityError } from "../src/errors";
-import { validateBody } from "../src/middlewares";
-import { signUpSchema } from "../src/schemas";
+import { UnprocessableEntityError } from "../../src/errors";
+import { validateBody } from "../../src/middlewares";
+import { signUpSchema } from "../../src/schemas";
 
 describe("SingUpSchema", () => {
   const VALID_CPF = "02775520014";
